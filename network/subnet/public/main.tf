@@ -64,7 +64,7 @@ resource "aws_network_acl" "private_nacl" {
     to_port    = 0
   }
   tags = {
-    "Name" = "${var.project_name}-nacl"
+    "Name" = "${var.project_name}-public-nacl"
   }
 }
 resource "aws_network_acl_association" "nacl_association" {

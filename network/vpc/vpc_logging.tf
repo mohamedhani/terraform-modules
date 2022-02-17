@@ -2,7 +2,7 @@ module "vpc_flow_log_bucket" {
   source         = "../../s3-bucket/"
   bucket_name    = "vpc-flow-logs"
   force_destroy  = true
-  has_versioning = false
+  enable_versioning = false
 }
 
 resource "aws_flow_log" "main_vpc_log_flow" {
