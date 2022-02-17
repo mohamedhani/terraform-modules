@@ -9,7 +9,7 @@ variable "force_destroy" {
   default = false
 }
 
-variable "has_versioning" {
+variable "enable_versioning" {
   type    = bool
   default = true
 
