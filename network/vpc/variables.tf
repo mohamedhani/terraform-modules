@@ -12,6 +12,10 @@ variable "enable_dns_hostnames" {
   default = true
 }
 
-variable "project_name" {
+variable "vpc_name" {
   type = string
+}
+variable "default_tags" {
+  type=map(string)
+  default = {}
 }

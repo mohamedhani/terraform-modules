@@ -1,6 +1,6 @@
 module "vpc_flow_log_bucket" {
   source         = "../../s3-bucket/"
-  bucket_name    = "vpc-flow-logs"
+  bucket_name    = "${var.vpc_name}-vpc-flow-logs"
   force_destroy  = true
   enable_versioning = false
 }
@@ -16,5 +16,4 @@ resource "aws_flow_log" "main_vpc_log_flow" {
     file_format        = "parquet"
     per_hour_partition = true
   }
-
 }
