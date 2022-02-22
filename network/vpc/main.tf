@@ -5,7 +5,7 @@ resource "aws_vpc" "main_vpc" {
   enable_dns_hostnames = true
   tags = merge({
     "Name" = "${var.vpc_name}"
-  },var.default_tags)
+  }, var.default_tags)
 }
 
 
@@ -13,7 +13,7 @@ resource "aws_default_route_table" "default_route_table" {
   default_route_table_id = aws_vpc.main_vpc.default_route_table_id
   tags = merge({
     "Name" = "${var.vpc_name}-default-rt"
-  },var.default_tags)
+  }, var.default_tags)
 }
 
 
@@ -38,7 +38,7 @@ resource "aws_default_security_group" "default_security_group" {
   }
   tags = merge({
     "Name" = "${var.vpc_name}-default-sg"
-  },var.default_tags)
+  }, var.default_tags)
 }
 
 
@@ -63,9 +63,9 @@ resource "aws_default_network_acl" "default_network_acl" {
     cidr_block = "0.0.0.0/0"
   }
 
-  tags =  merge({
+  tags = merge({
     "Name" = "${var.vpc_name}-default-nacl"
-  },var.default_tags)
+  }, var.default_tags)
 
 }
 
@@ -73,5 +73,5 @@ resource "aws_internet_gateway" "main_igw" {
   vpc_id = aws_vpc.main_vpc.id
   tags = merge({
     "Name" = "${var.vpc_name}-igw"
-  },var.default_tags)
+  }, var.default_tags)
 }
