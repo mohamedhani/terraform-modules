@@ -1,0 +1,6 @@
+#!/bin/bash
+set -o xtrace
+
+KUBELET_EXTRA_ARGS=${kubelet_extra_args}
+DNS_SERVICE_IP=${dns_service_ip}
+/etc/eks/bootstrap.sh  ${cluster-name} --apiserver-endpoint ${cluster-endpoint} --b64-cluster-ca ${cluster-ca}  $KUBELET_EXTRA_ARGS  --dns-cluster-ip $DNS_SERVICE_IP
