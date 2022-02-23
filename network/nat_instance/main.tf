@@ -31,7 +31,6 @@ resource "aws_key_pair" "nat_instance_key_pair" {
 
 }
 
-
 resource "aws_instance" "nat_instance" {
 
   count = local.no_of_subnets
@@ -44,9 +43,9 @@ resource "aws_instance" "nat_instance" {
   vpc_security_group_ids = [aws_security_group.nat_instance_sg.id]
   subnet_id              = element(var.subnet_ids, count.index)
   source_dest_check      = false
-  tags = {
-    "Name" = "${var.project_name}-${element(local.azs, count.index)}-nat-instance"
-  }
+  tags = merge({
+    "Name" = "${var.vpc_name}-${element(local.azs, count.index)}-nat-instance"
+  }, var.default_tags)
 }
 
 resource "aws_eip" "nat_instance_eip" {
@@ -79,9 +78,9 @@ resource "aws_security_group" "nat_instance_sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
-  tags = {
-    "Name" = "${var.project_name}-nat-instance-sg"
-  }
+  tags = merge({
+    "Name" = "${var.vpc_name}-nat-instance-sg"
+  }, var.default_tags)
 }
 
 /*
