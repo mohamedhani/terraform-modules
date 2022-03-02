@@ -26,6 +26,8 @@ resource "aws_subnet" "subnet" {
 
 }
 
+
+
 resource "aws_route_table" "route_table" {
   vpc_id = var.vpc_id
 
@@ -43,7 +45,7 @@ resource "aws_route_table_association" "route_table_association" {
   subnet_id      = aws_subnet.subnet[count.index].id
   route_table_id = aws_route_table.route_table.id
 }
-resource "aws_network_acl" "private_nacl" {
+resource "aws_network_acl" "public_acl" {
 
   vpc_id = var.vpc_id
   ingress {
@@ -66,9 +68,10 @@ resource "aws_network_acl" "private_nacl" {
     "Name" = "${var.vpc_name}-public-nacl"
   }, var.default_tags)
 }
+
 resource "aws_network_acl_association" "nacl_association" {
   count          = local.no_of_subnets
-  network_acl_id = aws_network_acl.private_nacl.id
+  network_acl_id = aws_network_acl.public_acl.id
   subnet_id      = aws_subnet.subnet[count.index].id
 }
 

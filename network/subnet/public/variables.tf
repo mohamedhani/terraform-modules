@@ -2,6 +2,9 @@ variable "vpc_id" {
   type = string
 
 }
+variable "instance_public_key" {
+  type =string
+}
 
 variable "cidr_blocks" {
   type = list(string)

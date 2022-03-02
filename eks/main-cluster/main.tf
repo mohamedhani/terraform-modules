@@ -30,14 +30,15 @@ resource "aws_eks_cluster" "main_cluster" {
     "Name" = var.cluster_name
   }, var.default_tags)
   depends_on = [
-    aws_cloudwatch_log_group.cloud_watch_group,
+  #  aws_cloudwatch_log_group.cloud_watch_group,
     aws_iam_role_policy_attachment.eks_role_policy_attcement
   ]
 }
-
+/*
 resource "aws_cloudwatch_log_group" "cloud_watch_group" {
   count             = length(var.log_types) > 0 ? 1 : 0
   name              = "/aws/eks/${var.cluster_name}/cluster"
   retention_in_days = 7
 
 }
+*/
