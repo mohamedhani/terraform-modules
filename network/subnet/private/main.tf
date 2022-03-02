@@ -30,7 +30,7 @@ resource "aws_route_table" "route_table" {
 
   count  = local.no_of_subnets
   vpc_id = var.vpc_id
- /*
+  /*
   route {
     cidr_block           = "0.0.0.0/0"
     network_interface_id = element(var.instance_network_ids, count.index) # it will be instance-id for private subnets and igw for public subnets
@@ -43,16 +43,16 @@ resource "aws_route_table" "route_table" {
 
 
 resource "aws_route" "public_route" {
-  count =  length(var.instance_network_ids)
-  route_table_id            = element(aws_route_table.route_table,count.index).id
-  destination_cidr_block    = "0.0.0.0/0"
-  network_interface_id = element(var.instance_network_ids, count.index) 
+  count                  = length(var.instance_network_ids)
+  route_table_id         = element(aws_route_table.route_table, count.index).id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = element(var.instance_network_ids, count.index)
 }
 
 resource "aws_route_table_association" "route_table_association" {
   count          = local.no_of_subnets
   subnet_id      = aws_subnet.subnet[count.index].id
-  route_table_id =   aws_route_table.route_table[count.index].id
+  route_table_id = aws_route_table.route_table[count.index].id
 }
 
 

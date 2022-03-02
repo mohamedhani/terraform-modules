@@ -3,7 +3,7 @@ variable "vpc_id" {
 
 }
 variable "instance_public_key" {
-  type =string
+  type = string
 }
 
 variable "cidr_blocks" {
