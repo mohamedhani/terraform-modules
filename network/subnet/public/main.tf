@@ -1,5 +1,5 @@
 locals {
-  tags  = merge(var.default_tags,var.extra_tags)
+  tags = merge(var.default_tags, var.extra_tags)
 }
 
 data "aws_availability_zones" "region_azs" {
@@ -26,7 +26,7 @@ resource "aws_subnet" "subnet" {
     "Name" = "${var.vpc_name}-${element(local.azs, count.index)}-public-subnet"
     #   "kubernetes.io/role/internal-elb" = "1"
     #   "kubernetes.io/cluster/${var.project_name}-eks-cluster"="shared"
-  }, local.tags )
+  }, local.tags)
 
 
 }

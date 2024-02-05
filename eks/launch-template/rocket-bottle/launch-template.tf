@@ -19,9 +19,9 @@ resource "aws_launch_template" "node_group_template" {
       volume_type = "gp2"
     }
   }
- 
+
   vpc_security_group_ids = [var.node_group_sg_id]
-  
-  user_data              = "${base64encode(templatefile("${path.module}/userdata.sh.tmpl", local.user_data_vars))}"
-  tags                   = merge({ "Name" = "${var.cluster_name}-${var.ng_name}-template" }, var.default_tags)
+
+  user_data = base64encode(templatefile("${path.module}/userdata.sh.tmpl", local.user_data_vars))
+  tags      = merge({ "Name" = "${var.cluster_name}-${var.ng_name}-template" }, var.default_tags)
 }

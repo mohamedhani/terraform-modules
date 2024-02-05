@@ -45,16 +45,16 @@ variable "default_tags" {
 
 }
 variable "enable_lb_controller" {
-  type = bool
+  type    = bool
   default = false
 }
 variable "lb_controller" {
-  type = object( {
-    namespace =string,
+  type = object({
+    namespace            = string,
     service_account_name = string
   })
   default = {
-    namespace = ""
+    namespace            = ""
     service_account_name = ""
   }
 }

@@ -3,7 +3,7 @@ locals {
     "eks:nodegroup-name"                            = var.ng_name,
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned",
-    "kubernetes.io/cluster/${var.cluster_name}" = "owned" }
+  "kubernetes.io/cluster/${var.cluster_name}" = "owned" }
 }
 
 resource "aws_autoscaling_group" "node_group_asg" {

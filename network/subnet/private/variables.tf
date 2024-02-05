@@ -19,6 +19,6 @@ variable "default_tags" {
   default = {}
 }
 variable "extra_tags" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }

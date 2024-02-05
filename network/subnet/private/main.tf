@@ -1,5 +1,5 @@
 locals {
-  tags  = merge(var.default_tags,var.extra_tags) 
+  tags = merge(var.default_tags, var.extra_tags)
 }
 
 data "aws_availability_zones" "region_azs" {

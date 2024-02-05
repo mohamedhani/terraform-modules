@@ -1,5 +1,5 @@
 variable "cluster_name" {
-    type =  string
+  type = string
 }
 
 variable "ng_name" {
@@ -7,24 +7,24 @@ variable "ng_name" {
 }
 
 variable "ami_id" {
-  type  = string
+  type = string
 }
 
 variable "instance_type" {
-  type =  string
+  type = string
 }
 
 variable "node_group_sg_id" {
-  type =  string
+  type = string
 }
 
 variable "additional_node_labels" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
 variable "extra_settings" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
@@ -33,7 +33,7 @@ variable "max_pods" {
 }
 
 variable "node_taints" {
-  type = map(string)
+  type    = map(string)
   default = {}
 }
 
