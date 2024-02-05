@@ -3,7 +3,7 @@ locals {
     "eks:nodegroup-name"                            = var.ng_name,
     "k8s.io/cluster-autoscaler/enabled"             = "true",
     "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned",
-  "kubernetes.io/cluster/${var.cluster_name}" = "owned" }
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned" }
 }
 
 resource "aws_autoscaling_group" "node_group_asg" {
@@ -14,7 +14,7 @@ resource "aws_autoscaling_group" "node_group_asg" {
   capacity_rebalance  = false
   default_cooldown    = 60
   launch_template {
-    name    = aws_launch_template.node_group_template.name
+    name    = var.launch_template_name
     version = "$Latest"
   }
   health_check_grace_period = 300
@@ -24,13 +24,13 @@ resource "aws_autoscaling_group" "node_group_asg" {
   suspended_processes       = []
   instance_refresh {
     strategy = "Rolling"
-    triggers = ["launch_template"]
     preferences {
       checkpoint_delay = 300
       instance_warmup  = 300
     }
 
   }
+
   dynamic "tag" {
     for_each = merge(local.asg_tags, var.default_tags)
     content {

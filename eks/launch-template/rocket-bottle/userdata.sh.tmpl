@@ -1,0 +1,21 @@
+[settings.kubernetes]
+    api-server = "${cluster_endpoint}"
+    cluster-certificate = "${cluster_ca}"
+    cluster-name = "${cluster_name}"
+    cluster-dns-ip = "${dns_cluster_ip}"
+%{ for setting_key, setting_value in extra_settings ~}
+    ${setting_key} = ${setting_value}
+%{ endfor ~}
+
+[settings.kubernetes.node-labels]
+%{ for label_key, label_value in node_labels ~}
+    "${label_key}" = "${label_value}"
+%{ endfor ~}
+
+[settings.kubernetes.node-taints]
+%{ for taint_key, taint_value in node_taints ~}
+    "${taint_key}" = "${taint_value}"
+%{ endfor ~}
+
+[settings.host-containers.admin]
+    enabled = ${enable_ssh_access}

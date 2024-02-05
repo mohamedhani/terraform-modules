@@ -1,4 +1,6 @@
-
+locals {
+  needed_addons = ["coredns", "kube-proxy"]
+}
 
 resource "aws_eks_cluster" "main_cluster" {
   name                      = var.cluster_name
@@ -42,3 +44,6 @@ resource "aws_cloudwatch_log_group" "cloud_watch_group" {
 
 }
 */
+
+# TODO[MHani]tagging my private subnets
+

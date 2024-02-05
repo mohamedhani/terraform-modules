@@ -44,3 +44,17 @@ variable "default_tags" {
   default = {}
 
 }
+variable "enable_lb_controller" {
+  type = bool
+  default = false
+}
+variable "lb_controller" {
+  type = object( {
+    namespace =string,
+    service_account_name = string
+  })
+  default = {
+    namespace = ""
+    service_account_name = ""
+  }
+}

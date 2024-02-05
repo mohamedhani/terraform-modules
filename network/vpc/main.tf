@@ -23,19 +23,6 @@ resource "aws_default_route_table" "default_route_table" {
 
 resource "aws_default_security_group" "default_security_group" {
   vpc_id = aws_vpc.main_vpc.id
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress {
-    cidr_blocks = [var.cidr_block]
-    protocol    = "tcp"
-    from_port   = 22
-    to_port     = 22
-
-  }
   tags = merge({
     "Name" = "${var.vpc_name}-default-sg"
   }, var.default_tags)
