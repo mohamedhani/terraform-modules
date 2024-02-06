@@ -64,9 +64,9 @@ resource "aws_network_acl" "default" {
   }, var.default_tags)
 }
 
- resource "aws_network_acl_association" "default" {
-   for_each = toset(local.sorted_azs)
+resource "aws_network_acl_association" "default" {
+  for_each = toset(local.sorted_azs)
 
-   network_acl_id = aws_network_acl.default.id
-   subnet_id      = aws_subnet.default[each.value].id
- }
+  network_acl_id = aws_network_acl.default.id
+  subnet_id      = aws_subnet.default[each.value].id
+}
