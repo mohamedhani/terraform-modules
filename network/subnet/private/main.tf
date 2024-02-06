@@ -1,66 +1,52 @@
-locals {
-  tags = merge(var.default_tags, var.extra_tags)
-}
-
 data "aws_availability_zones" "region_azs" {
   all_availability_zones = false
   state                  = "available"
-
 }
 
 locals {
-  azs           = data.aws_availability_zones.region_azs.names
-  no_of_subnets = length(var.cidr_blocks)
+  sorted_azs = slice(sort(data.aws_availability_zones.region_azs.names), 0, length(var.cidr_blocks))
+  tags       = merge(var.default_tags, var.extra_tags)
 }
 
-resource "aws_subnet" "subnet" {
-
-  count             = local.no_of_subnets
+resource "aws_subnet" "default" {
+  for_each          = toset(local.sorted_azs)
   vpc_id            = var.vpc_id
-  cidr_block        = element(var.cidr_blocks, count.index)
-  availability_zone = element(local.azs, count.index)
-
+  cidr_block        = element(var.cidr_blocks, index(local.sorted_azs, each.value))
+  availability_zone = each.value
 
   private_dns_hostname_type_on_launch = "ip-name"
   tags = merge({
-    "Name" = "${var.vpc_name}-${element(local.azs, count.index)}-private-subnet"
+    "Name" = "${var.vpc_name}-${each.value}-private-subnet"
     #   "kubernetes.io/role/internal-elb" = "1"
     #   "kubernetes.io/cluster/${var.project_name}-eks-cluster"="shared"
   }, local.tags)
 
 }
 
-resource "aws_route_table" "route_table" {
+resource "aws_route_table" "default" {
 
-  count  = local.no_of_subnets
-  vpc_id = var.vpc_id
-  /*
-  route {
-    cidr_block           = "0.0.0.0/0"
-    network_interface_id = element(var.instance_network_ids, count.index) # it will be instance-id for private subnets and igw for public subnets
-  }
-  */
+  for_each = toset(local.sorted_azs)
+  vpc_id   = var.vpc_id
   tags = merge({
-    "Name" = "${var.vpc_name}-${element(local.azs, count.index)}-private-route-table"
+    "Name" = "${var.vpc_name}-${each.value}-private-route-table"
   }, var.default_tags)
 }
 
 
-resource "aws_route" "public_route" {
-  count                  = length(var.instance_network_ids)
-  route_table_id         = element(aws_route_table.route_table, count.index).id
+resource "aws_route" "default" {
+  for_each               = toset(length(var.nat_gateway_ids) == 0 ? [] : local.sorted_azs)
+  route_table_id         = aws_route_table.default[each.value].id
   destination_cidr_block = "0.0.0.0/0"
-  network_interface_id   = element(var.instance_network_ids, count.index)
+  nat_gateway_id         = length(var.nat_gateway_ids) == 1 ? var.nat_gateway_ids[0] : var.nat_gateway_ids[index(local.sorted_azs, each.value)]
 }
 
 resource "aws_route_table_association" "route_table_association" {
-  count          = local.no_of_subnets
-  subnet_id      = aws_subnet.subnet[count.index].id
-  route_table_id = aws_route_table.route_table[count.index].id
+  for_each       = toset(local.sorted_azs)
+  subnet_id      = aws_subnet.default[each.value].id
+  route_table_id = aws_route_table.default[each.value].id
 }
 
-
-resource "aws_network_acl" "private_nacl" {
+resource "aws_network_acl" "default" {
 
   vpc_id = var.vpc_id
   ingress {
@@ -84,8 +70,9 @@ resource "aws_network_acl" "private_nacl" {
   }, var.default_tags)
 
 }
-resource "aws_network_acl_association" "nacl_association" {
-  count          = local.no_of_subnets
-  network_acl_id = aws_network_acl.private_nacl.id
-  subnet_id      = aws_subnet.subnet[count.index].id
+
+resource "aws_network_acl_association" "default" {
+  for_each       = toset(local.sorted_azs)
+  network_acl_id = aws_network_acl.default.id
+  subnet_id      = aws_subnet.default[each.value].id
 }

@@ -1,3 +1,3 @@
-output "private_subnets_id" {
-  value = aws_subnet.subnet.*.id
+output "ids" {
+  value = [for s in aws_subnet.default : s.id]
 }
