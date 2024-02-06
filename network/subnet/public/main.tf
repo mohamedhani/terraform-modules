@@ -13,11 +13,11 @@ resource "aws_subnet" "default" {
 
   vpc_id                              = var.vpc_id
   cidr_block                          = element(var.cidr_blocks, index(local.sorted_azs, each.value))
-  availability_zone                   = element(local.sorted_azs, index(local.sorted_azs, each.value))
+  availability_zone                   = each.value
   map_public_ip_on_launch             = true
   private_dns_hostname_type_on_launch = "ip-name"
   tags = merge({
-    "Name" = "${var.vpc_name}-${element(local.sorted_azs, index(local.sorted_azs, each.value))}-public-subnet"
+    "Name" = "${var.vpc_name}-${each.value}-public-subnet"
     #   "kubernetes.io/role/internal-elb" = "1"
     #   "kubernetes.io/cluster/${var.project_name}-eks-cluster"="shared"
   }, local.tags)
@@ -37,7 +37,7 @@ resource "aws_route_table" "default" {
 resource "aws_route_table_association" "default" {
   for_each = toset(local.sorted_azs)
 
-  subnet_id      = element(aws_subnet.default, index(local.sorted_azs, each.value)).id
+  subnet_id      = aws_subnet.default[each.value].id
   route_table_id = aws_route_table.default.id
 }
 
@@ -64,9 +64,9 @@ resource "aws_network_acl" "default" {
   }, var.default_tags)
 }
 
-resource "aws_network_acl_association" "nacl_association" {
-  for_each = toset(local.sorted_azs)
+ resource "aws_network_acl_association" "default" {
+   for_each = toset(local.sorted_azs)
 
-  network_acl_id = aws_network_acl.default.id
-  subnet_id      = element(aws_subnet.default, index(local.sorted_azs, each.value)).id
-}
+   network_acl_id = aws_network_acl.default.id
+   subnet_id      = aws_subnet.default[each.value].id
+ }

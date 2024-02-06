@@ -1,3 +1,3 @@
-output "prublic_subnets_id" {
-  value = aws_subnet.default.*.id
+output "ids" {
+  value = [for s in aws_subnet.default: s.id]
 }
