@@ -1,41 +1,30 @@
-locals {
-  tags = merge(var.default_tags, var.extra_tags)
-}
-
 data "aws_availability_zones" "region_azs" {
   all_availability_zones = false
   state                  = "available"
-
 }
 
 locals {
-  azs           = data.aws_availability_zones.region_azs.names
-  no_of_subnets = length(var.cidr_blocks)
+  sorted_azs = slice(sort(data.aws_availability_zones.region_azs.names), 0, length(var.cidr_blocks))
+  tags       = merge(var.default_tags, var.extra_tags)
 }
 
-resource "aws_subnet" "subnet" {
+resource "aws_subnet" "default" {
+  for_each = toset(local.sorted_azs)
 
-  count      = local.no_of_subnets
-  vpc_id     = var.vpc_id
-  cidr_block = element(var.cidr_blocks, count.index)
-
-  availability_zone                   = element(local.azs, count.index)
+  vpc_id                              = var.vpc_id
+  cidr_block                          = element(var.cidr_blocks, index(local.sorted_azs, each.value))
+  availability_zone                   = element(local.sorted_azs, index(local.sorted_azs, each.value))
   map_public_ip_on_launch             = true
   private_dns_hostname_type_on_launch = "ip-name"
   tags = merge({
-    "Name" = "${var.vpc_name}-${element(local.azs, count.index)}-public-subnet"
+    "Name" = "${var.vpc_name}-${element(local.sorted_azs, index(local.sorted_azs, each.value))}-public-subnet"
     #   "kubernetes.io/role/internal-elb" = "1"
     #   "kubernetes.io/cluster/${var.project_name}-eks-cluster"="shared"
   }, local.tags)
-
-
 }
 
-
-
-resource "aws_route_table" "route_table" {
+resource "aws_route_table" "default" {
   vpc_id = var.vpc_id
-
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = var.igw_id
@@ -45,13 +34,14 @@ resource "aws_route_table" "route_table" {
   }, var.default_tags)
 }
 
-resource "aws_route_table_association" "route_table_association" {
-  count          = local.no_of_subnets
-  subnet_id      = aws_subnet.subnet[count.index].id
-  route_table_id = aws_route_table.route_table.id
-}
-resource "aws_network_acl" "public_acl" {
+resource "aws_route_table_association" "default" {
+  for_each = toset(local.sorted_azs)
 
+  subnet_id      = element(aws_subnet.default, index(local.sorted_azs, each.value)).id
+  route_table_id = aws_route_table.default.id
+}
+
+resource "aws_network_acl" "default" {
   vpc_id = var.vpc_id
   ingress {
     protocol   = "-1"
@@ -75,8 +65,8 @@ resource "aws_network_acl" "public_acl" {
 }
 
 resource "aws_network_acl_association" "nacl_association" {
-  count          = local.no_of_subnets
-  network_acl_id = aws_network_acl.public_acl.id
-  subnet_id      = aws_subnet.subnet[count.index].id
-}
+  for_each = toset(local.sorted_azs)
 
+  network_acl_id = aws_network_acl.default.id
+  subnet_id      = element(aws_subnet.default, index(local.sorted_azs, each.value)).id
+}
