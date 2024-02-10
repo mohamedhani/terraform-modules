@@ -4,7 +4,6 @@ variable "vpc_id" {
 
 variable "cluster_name" {
   type = string
-
 }
 
 variable "log_types" {

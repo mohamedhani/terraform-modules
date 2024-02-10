@@ -28,7 +28,6 @@ resource "aws_vpc_security_group_ingress_rule" "eks_cluster_public_access_sg_ing
 
 resource "aws_vpc_security_group_egress_rule" "eks_cluster_admission_controll_sg_egress_rule" {
   security_group_id            = aws_security_group.eks_cluster_sg.id
-  cidr_ipv4                    = "10.0.0.0/8"
   ip_protocol                  = "tcp"
   from_port                    = 1025
   to_port                      = 65535
@@ -37,7 +36,6 @@ resource "aws_vpc_security_group_egress_rule" "eks_cluster_admission_controll_sg
 
 resource "aws_vpc_security_group_egress_rule" "eks_cluster_https_access_sg_egress_rule" {
   security_group_id            = aws_security_group.eks_cluster_sg.id
-  cidr_ipv4                    = "10.0.0.0/8"
   ip_protocol                  = "tcp"
   from_port                    = 443
   to_port                      = 443
