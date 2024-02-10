@@ -58,8 +58,6 @@ resource "aws_security_group" "node_group_sg" {
 
 resource "aws_vpc_security_group_ingress_rule" "node_group_internal_access_sg_ingress_rule" {
   security_group_id            = aws_security_group.node_group_sg.id
-  from_port                    = 0
-  to_port                      = 0
   ip_protocol                  = "-1"
   referenced_security_group_id = aws_security_group.node_group_sg.id
 }
