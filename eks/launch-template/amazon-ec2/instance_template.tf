@@ -4,7 +4,7 @@ resource "aws_launch_template" "default" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.default.arn
   }
-  image_id      = var.ami_id
+  image_id      = data.aws_ssm_parameter.ami_id.value
   instance_type = var.instance_type
 
   block_device_mappings {
