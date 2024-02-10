@@ -11,8 +11,8 @@ variable "max_size" {
 }
 variable "min_size" {
   type = number
-
 }
+
 variable "initial_size" {
   type = number
 }
@@ -25,4 +25,3 @@ variable "default_tags" {
   type    = map(string)
   default = {}
 }
-
