@@ -1,5 +1,5 @@
 locals {
-  default_node_labels = { "eks.amazonaws.com/nodegroup-image" = var.ami_id,
+  default_node_labels = { "eks.amazonaws.com/nodegroup-image" = data.aws_ssm_parameter.ami_id.value,
     "eks.amazonaws.com/capacityType" = "ON_DEMAND",
   "eks.amazonaws.com/nodegroup" = var.ng_name }
 
