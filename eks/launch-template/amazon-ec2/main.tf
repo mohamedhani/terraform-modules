@@ -22,4 +22,7 @@ resource "aws_launch_template" "default" {
   user_data              = base64encode(templatefile("${path.module}/templates/userdata.sh.tmpl", local.user_data_vars))
   tags                   = merge({ "Name" = "${var.cluster_name}-${var.ng_name}-template" }, var.default_tags)
 
+  depends_on = [
+    aws_iam_role_policy_attachment.default
+  ]
 }
