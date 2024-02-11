@@ -1,4 +1,4 @@
-variable "addon_name" {
+variable "name" {
   type = string
 }
 

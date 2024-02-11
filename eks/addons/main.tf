@@ -3,12 +3,12 @@ data "aws_eks_cluster" "eks_cluster" {
 }
 
 data "aws_eks_addon_version" "addon_version" {
-  addon_name         = var.addon_name
+  addon_name         = var.name
   kubernetes_version = data.aws_eks_cluster.eks_cluster.version
   most_recent        = true
 }
 
 resource "aws_eks_addon" "default" {
   cluster_name = var.cluster_name
-  addon_name   = var.addon_name
+  addon_name   = var.name
 }
