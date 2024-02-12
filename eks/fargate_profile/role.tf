@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "fargate_assume_role_document" {
     }
   }
 }
+
 resource "aws_iam_role_policy_attachment" "AmazonEKSFargatePodExecutionRolePolicy" {
   for_each   = toset(local.policies)
   policy_arn = each.value
