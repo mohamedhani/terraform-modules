@@ -9,3 +9,7 @@ output "eks_arn" {
 output "ng_sg_id" {
   value = aws_security_group.node_group_sg.id
 }
+
+output "ng_worker_role_arn" {
+  value = aws_iam_role.worker_node_role.arn
+}
