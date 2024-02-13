@@ -13,3 +13,7 @@ output "ng_sg_id" {
 output "ng_worker_role_arn" {
   value = aws_iam_role.worker_node_role.arn
 }
+
+output "worker_node_profile_arn" {
+  value = aws_iam_instance_profile.worker_node_instance_profile.arn
+}

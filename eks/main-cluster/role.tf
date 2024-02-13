@@ -54,3 +54,8 @@ resource "aws_iam_role_policy_attachment" "worker_node_role_policy_attachment" {
   policy_arn = each.value
   role       = aws_iam_role.worker_node_role.name
 }
+
+resource "aws_iam_instance_profile" "worker_node_instance_profile" {
+  name = "${var.cluster_name}-worker-node-profile"
+  role = aws_iam_role.worker_node_role.name
+}

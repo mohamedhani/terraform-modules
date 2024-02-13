@@ -1,6 +1,6 @@
 resource "aws_eks_cluster" "main_cluster" {
   name                      = var.cluster_name
-  role_arn                  = aws_iam_role.default.arn
+  role_arn                  = aws_iam_role.eks_role.arn
   enabled_cluster_log_types = var.log_types
   version                   = var.eks_cluster_version
 
