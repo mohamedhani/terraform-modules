@@ -8,6 +8,6 @@ resource "aws_eks_fargate_profile" "default" {
     namespace = var.namespace
     labels    = var.labels
   }
-
-  tags = merge({ "Name" = "${var.cluster_name}-${var.name}" }, var.default_tags)
+  depends_on = [aws_iam_role_policy_attachment.default]
+  tags       = merge({ "Name" = "${var.cluster_name}-${var.name}" }, var.default_tags)
 }
