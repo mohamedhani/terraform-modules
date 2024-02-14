@@ -1,6 +1,6 @@
 resource "aws_eks_cluster" "main_cluster" {
   name                      = var.cluster_name
-  role_arn                  = aws_iam_role.eks_role.arn
+  role_arn                  = aws_iam_role.default.arn
   enabled_cluster_log_types = var.log_types
   version                   = var.eks_cluster_version
 
@@ -22,7 +22,7 @@ resource "aws_eks_cluster" "main_cluster" {
   }, var.default_tags)
   depends_on = [
     aws_cloudwatch_log_group.cloud_watch_group,
-    aws_iam_role_policy_attachment.eks_role_policy_attcement
+    aws_iam_role_policy_attachment.default
   ]
 }
 
