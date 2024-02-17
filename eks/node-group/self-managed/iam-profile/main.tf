@@ -15,7 +15,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 
 resource "aws_iam_role" "default" {
   name               = var.name
-  assume_role_policy = data.aws_iam_policy_document.ec2_assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
   tags               = var.default_tags
 }
 
