@@ -22,7 +22,7 @@ resource "aws_iam_role" "default" {
 resource "aws_iam_role_policy_attachment" "default" {
   for_each   = toset(local.policies)
   policy_arn = each.value
-  role       = aws_iam_role.default.arn
+  role       = aws_iam_role.default.name
 }
 
 resource "aws_iam_instance_profile" "default" {
