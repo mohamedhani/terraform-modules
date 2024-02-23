@@ -3,5 +3,5 @@ output "arn" {
 }
 
 output "namespace_arn" {
-  value = aws_service_discovery_http_namespace.default.arn
+  value = aws_service_discovery_private_dns_namespace.default.arn
 }
