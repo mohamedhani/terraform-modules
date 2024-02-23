@@ -1,12 +1,14 @@
 resource "aws_ecs_cluster" "default" {
-  name = var.cluster_name
+  name = "${var.project_name}-cluster"
+
   service_connect_defaults {
     namespace = aws_service_discovery_http_namespace.default.arn
   }
+
   configuration {
     execute_command_configuration {
       log_configuration {
-        cloud_watch_log_group_name = "/ecs/cluster/${var.cluster_name}"
+        cloud_watch_log_group_name = "/ecs/cluster/${var.project_name}-cluster"
       }
       logging = "OVERRIDE"
     }
@@ -20,13 +22,19 @@ resource "aws_ecs_cluster" "default" {
 }
 
 resource "aws_service_discovery_http_namespace" "default" {
-  name        = var.cluster_name
-  description = "It is a service discovery namespace for ${var.cluster_name} ecs cluster"
+  name        = "${var.project_name}-cluster"
+  description = "It is a service discovery namespace for ${var.project_name}-cluster er"
   tags        = var.default_tags
 }
 
 resource "aws_cloudwatch_log_group" "default" {
-  name              = "/ecs/cluster/${var.cluster_name}"
+  name              = "/ecs/cluster/${var.project_name}-cluster"
   retention_in_days = var.logs_retentions
   tags              = var.default_tags
+}
+
+resource "aws_service_discovery_private_dns_namespace" "default" {
+  name        = "${var.project_name}.local"
+  description = "It is a private  cloud map for ${var.project_name}-cluster"
+  vpc         = var.vpc_id
 }
