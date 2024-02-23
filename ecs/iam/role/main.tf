@@ -16,8 +16,8 @@ resource "aws_iam_role" "default" {
 }
 
 resource "aws_iam_role_policy" "default" {
-  for_each = toset(length(var.configs.dynamodb_tables) > 0 ? ["enabled"] : [])
-  role   = aws_iam_role.default.id
-  name   = "dynamodb-policies"
-  policy = local.merged_policy
+  for_each = toset(length(var.configs.dynamodb_tables) > 0 ? [] : ["enabled"] )
+  role     = aws_iam_role.default.id
+  name     = "dynamodb-policies"
+  policy   = local.merged_policy
 }
