@@ -14,6 +14,11 @@ variable "igw_id" {
   type = string
 }
 
+variable "single_nat_gateway" {
+  type    = bool
+  default = false
+}
+
 variable "default_tags" {
   type    = map(string)
   default = {}
