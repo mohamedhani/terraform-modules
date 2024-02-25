@@ -9,12 +9,20 @@ resource "aws_security_group" "eks_cluster_sg" {
   tags   = merge({ "Name" = "${var.cluster_name}-sg" }, local.sg_tags)
 }
 
-resource "aws_vpc_security_group_ingress_rule" "eks_cluster_https_sg_ingress_rule" {
+resource "aws_vpc_security_group_ingress_rule" "node_group_to_eks_cluster_https_sg_ingress_rule" {
   security_group_id            = aws_security_group.eks_cluster_sg.id
   from_port                    = 443
   to_port                      = 443
   ip_protocol                  = "tcp"
   referenced_security_group_id = aws_security_group.node_group_sg.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "pod_to_eks_cluster_https_sg_ingress_rule" {
+  security_group_id            = aws_security_group.eks_cluster_sg.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  referenced_security_group_id = aws_security_group.pod_sg.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "eks_cluster_public_access_sg_ingress_rule" {
@@ -26,7 +34,7 @@ resource "aws_vpc_security_group_ingress_rule" "eks_cluster_public_access_sg_ing
   cidr_ipv4         = each.value
 }
 
-resource "aws_vpc_security_group_egress_rule" "eks_cluster_admission_controll_sg_egress_rule" {
+resource "aws_vpc_security_group_egress_rule" "eks_cluster_to_node_group_admission_control_egress_rule" {
   security_group_id            = aws_security_group.eks_cluster_sg.id
   ip_protocol                  = "tcp"
   from_port                    = 1025
@@ -34,12 +42,28 @@ resource "aws_vpc_security_group_egress_rule" "eks_cluster_admission_controll_sg
   referenced_security_group_id = aws_security_group.node_group_sg.id
 }
 
-resource "aws_vpc_security_group_egress_rule" "eks_cluster_https_access_sg_egress_rule" {
+resource "aws_vpc_security_group_egress_rule" "eks_cluster_to_pod_admission_control_egress_rule" {
+  security_group_id            = aws_security_group.eks_cluster_sg.id
+  ip_protocol                  = "tcp"
+  from_port                    = 1025
+  to_port                      = 65535
+  referenced_security_group_id = aws_security_group.pod_sg.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "eks_cluster_to_node_group_https_access_egress_rule" {
   security_group_id            = aws_security_group.eks_cluster_sg.id
   ip_protocol                  = "tcp"
   from_port                    = 443
   to_port                      = 443
   referenced_security_group_id = aws_security_group.node_group_sg.id
+}
+
+resource "aws_vpc_security_group_egress_rule" "eks_cluster_to_pods_https_access_egress_rule" {
+  security_group_id            = aws_security_group.eks_cluster_sg.id
+  ip_protocol                  = "tcp"
+  from_port                    = 443
+  to_port                      = 443
+  referenced_security_group_id = aws_security_group.pod_sg.id
 }
 
 ################## Node Group Security Group ##################################
