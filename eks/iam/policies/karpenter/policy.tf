@@ -1,6 +1,7 @@
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
+
 locals {
   region     = data.aws_region.current.name
   partition  = data.aws_partition.current.partition
@@ -8,10 +9,8 @@ locals {
 }
 
 
-
-
-
 data "aws_iam_policy_document" "default" {
+
   statement {
     sid = "AllowScopedEC2InstanceActions"
     resources = [
@@ -169,7 +168,7 @@ data "aws_iam_policy_document" "default" {
 
   statement {
     sid       = "AllowSSMReadActions"
-    resources = ["*"]
+    resources = ["arn:${local.partition}:ssm:${local.region}::parameter/aws/service/*"]
     actions   = ["ssm:GetParameter"]
   }
 
@@ -179,7 +178,16 @@ data "aws_iam_policy_document" "default" {
     actions   = ["pricing:GetProducts"]
   }
 
-
+  statement {
+    sid = "AllowInterruptionQueueActions"
+    actions = [
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:GetQueueUrl",
+      "sqs:ReceiveMessage"
+    ]
+    resources = ["*"]
+  }
 
   statement {
     sid       = "AllowPassingInstanceRole"
