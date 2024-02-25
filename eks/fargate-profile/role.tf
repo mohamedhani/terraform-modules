@@ -3,7 +3,7 @@ locals {
   policies = ["arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy", "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"]
 }
 resource "aws_iam_role" "default" {
-  name = "${var.cluster_name}-${var.name}"
+  name = "${var.name}-${var.cluster_name}-fargate-role"
 
   assume_role_policy = data.aws_iam_policy_document.fargate_assume_role_document.json
 }
