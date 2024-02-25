@@ -1,4 +1,3 @@
-
 data "aws_eks_cluster" "main_cluster" {
   name = var.cluster_name
 }
@@ -25,15 +24,12 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "default" {
-  name               = "${var.service_account}@${var.cluster_name}"
+  name               = "${var.service_account}@${var.cluster_name}-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
-  inline_policy {
-    name   = "${var.service_account}-policy"
-    policy = var.policy
-  }
 }
 
-resource "aws_iam_role_policy_attachment" "default" {
-  policy_arn = each.value
-  role       = aws_iam_role.default.name
+resource "aws_iam_role_policy" "default" {
+  name   = "main_policy"
+  role   = aws_iam_role.default.id
+  policy = var.policy_json
 }

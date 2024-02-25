@@ -10,6 +10,6 @@ variable "cluster_name" {
   type = string
 }
 
-variable "policy" {
+variable "policy_json" {
   type = string
 }
