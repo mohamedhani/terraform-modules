@@ -34,6 +34,10 @@ variable "kubelet_extra_args" {
   default = {}
 }
 
+variable "instance_profile_arn" {
+  type = string
+}
+
 variable "default_tags" {
   type    = map(string)
   default = {}

@@ -2,7 +2,7 @@ resource "aws_launch_template" "default" {
   name                   = "${var.cluster_name}-${var.ng_name}-template"
   update_default_version = true
   iam_instance_profile {
-    arn = aws_iam_instance_profile.default.arn
+    arn = var.instance_profile_arn
   }
   image_id      = data.aws_ssm_parameter.ami_id.value
   instance_type = var.instance_type

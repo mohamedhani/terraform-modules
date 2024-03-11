@@ -30,4 +30,5 @@ resource "aws_cloudwatch_log_group" "cloud_watch_group" {
   count             = length(var.log_types) > 0 ? 1 : 0
   name              = "/aws/eks/${var.cluster_name}/cluster"
   retention_in_days = 7
+
 }
